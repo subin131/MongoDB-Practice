@@ -1,14 +1,30 @@
 import express from "express";
 import bodyParser from "body-parser";
-import MongoPractice from "./db.js";
+import mongoose from "mongoose";
+import routes from "./routes/routes.js";
 
 const app = express();
-const port = 5000;
 
 app.use(bodyParser.json());
 
-app.post("/products", MongoPractice.createUser);
+// ...
+mongoose.connect(
+  "mongodb+srv://admin:root@cluster0.7r5shx3.mongodb.net/?retryWrites=true&w=majority"
+);
+const database = mongoose.connection;
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+database.on("error", (error) => {
+  console.log(error);
 });
+
+database.once("connected", () => {
+  console.log("Database Connected");
+});
+
+app.use(express.json());
+
+app.listen(7000, () => {
+  console.log(`Server Started at ${7000}`);
+});
+
+app.use("/api", routes);
